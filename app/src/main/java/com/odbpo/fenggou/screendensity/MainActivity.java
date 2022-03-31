@@ -1,11 +1,15 @@
 package com.odbpo.fenggou.screendensity;
 
+import android.content.Context;
+import android.graphics.Rect;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.util.DisplayMetrics;
 import android.widget.TextView;
 
 import com.odbpo.fenggou.screendensity.util.DensityUtil;
+
+import java.lang.reflect.Field;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
@@ -26,6 +30,8 @@ public class MainActivity extends AppCompatActivity {
     TextView tvTipsDp2px;
     @Bind(R.id.tv_tips_px2dp)
     TextView tvTipsPx2dp;
+    @Bind(R.id.tv_state_bar_height)
+    TextView tvStateBarHeight;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -61,5 +67,31 @@ public class MainActivity extends AppCompatActivity {
         tvTipsPx2dp.setText("公式2：dp=px/(dpi/160)");
         tvDp2px.setText(px_result + "px = " + dp_pre + "dp * (" + dpi + "/160)");
         tvPx2dp.setText(dp_result + "dp = " + px_pre + "px / (" + dpi + "/160)");
+
+        tvStateBarHeight.setText("状态栏高度：" + getStatusBarHeight(this));
     }
+
+    /**
+     * 获取手机状态栏的高度
+     *
+     * @return 状态栏的高度
+     */
+    public static int getStatusBarHeight(Context context) {
+        Class<?> c;
+        Object obj;
+        Field field;
+        int x, statusBarHeight = 0;
+        try {
+            c = Class.forName("com.android.internal.R$dimen");
+            obj = c.newInstance();
+            field = c.getField("status_bar_height");
+            x = Integer.parseInt(field.get(obj).toString());
+            statusBarHeight = context.getResources().getDimensionPixelSize(x);
+        } catch (Exception e1) {
+            e1.printStackTrace();
+        }
+        return statusBarHeight;
+    }
+
+
 }

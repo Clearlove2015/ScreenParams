@@ -10,6 +10,13 @@ android {
         targetSdkVersion 27
         versionCode 1
         versionName "1.0"
+
+        //butterknife7.x在AS 3.x上需要
+        javaCompileOptions {
+            annotationProcessorOptions {
+                includeCompileClasspath = true
+            }
+        }
     }
     buildTypes {
         release {
